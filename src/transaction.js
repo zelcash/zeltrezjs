@@ -57,7 +57,7 @@ function mkScriptHashReplayScript(address) {
  * @param {Number} blockHeight NOPE not in zelcash
  * return {String} output script
  */
-function addressToScript(address) {
+function addressToScript(address, pubKeyHash) {
     // P2SH replay starts with a 's', or 't'
     if (address[1] === 's' || address[0] === 't') {
         return mkScriptHashReplayScript(address);
@@ -65,7 +65,7 @@ function addressToScript(address) {
 
     // P2PKH-replay is a replacement for P2PKH
     // P2PKH-replay starts with a 0
-    return mkPubkeyHashReplayScript(address);
+  return mkPubkeyHashReplayScript(address, pubKeyHash);
 }
 
 /*
@@ -229,7 +229,7 @@ function serializeTx(txObj) {
  * @param {Number} blockHeight (latest - 300) NOPE not in zelcash
  * @return {TXOBJ} Transction Object (see TXOBJ type for info about structure)
  */
-function createRawTx(history, recipients) {
+function createRawTx(history, recipients, pubKeyHash) {
     var txObj = { locktime: 0, version: 1, ins: [], outs: [] };
 
     txObj.ins = history.map(function (h) {
@@ -240,9 +240,9 @@ function createRawTx(history, recipients) {
             sequence: 'ffffffff'
         };
     });
-    txObj.outs = recipients.map(function (o) {
+  txObj.outs = recipients.map(function (o, pubKeyHash) {
         return {
-            script: addressToScript(o.address),
+          script: addressToScript(o.address, pubKeyHash),
             satoshis: o.satoshis
         };
     });
