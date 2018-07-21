@@ -1,7 +1,7 @@
 {
   "name": "zeltrezjs",
-  "version": "1.0.2",
-  "description": "Dead easy to use Zelcash JavaScript based library",
+  "version": "1.1.0",
+  "description": "ZelTreZ JavaScript based library",
   "main": "./lib/index.js",
   "repository": "https://github.com/TheTrunk/zeltrezjs.git",
   "author": "The Trunk",

@@ -17,14 +17,8 @@ var zbufferutils = require('./bufferutils');
  * @param {String} pubKeyHash (optional)
  * return {String} pubKeyScript
  */
-function mkPubkeyHashReplayScript(address) {
+function mkPubkeyHashReplayScript(address, pubKeyHash) {
   // Get lengh of pubKeyHash (so we know where to substr later on)
-  // t for zec,zel,hush,btcz; L for LTC, 1 for BTC, m and n for LTC and BTC testnet
-  if (address[0] === 't') {
-    var pubKeyHash = "1cb8"
-  } else if (address[0] === 'L' || address[0] === '1' || address[0] === 'm' || address[0] === 'n' || address[0] === 'R') {
-    var pubKeyHash = "30"
-  }
 
   var addrHex = bs58check.decode(address).toString('hex');
 
@@ -45,16 +39,9 @@ function mkPubkeyHashReplayScript(address) {
  * @param {Number} blockHeight NOPE not in zelcash
  * return {String} scriptHash script
  */
-function mkScriptHashReplayScript(address) {
+function mkScriptHashReplayScript(address, pubKeyHash) {
 
   // Get lengh of pubKeyHash (so we know where to substr later on)
-  // t for zec,zel,hush,btcz, 2 and 3 for btc/ltc multisig testnet and livenet
-  var pubKeyHash;
-  if (address[0] === 't') {
-    pubKeyHash = "1cb8"
-  } else if (address[0] === '2' || address[0] === '3' || address[0] === 'r') {
-    pubKeyHash = "30"
-  }
 
   var addrHex = bs58check.decode(address).toString('hex');
   var subAddrHex = addrHex.substring(pubKeyHash.length, addrHex.length); // Cut out the '00' (we also only want 14 bytes instead of 16)
@@ -71,22 +58,18 @@ function mkScriptHashReplayScript(address) {
  * @param {Number} blockHeight NOPE not in zelcash
  * return {String} output script
  */
-function addressToScript(address) {
+function addressToScript(address, pubKeyHash, isP2SH) {
   // NULL transaction todo?
   //if (address === null || address === undefined) {
   //return mkNullDataReplayScript(data, blockHeight, blockHash)
   //}
-
-  // P2SH replay starts with a '2', or '3' or 't3' 
-  if (address[0] === '2' || address[0] === '3' || address[0] === 'r') {
-    return mkScriptHashReplayScript(address)
-  } else if (address[0] === 't' && address[1] === '3') {
-    return mkScriptHashReplayScript(address)
+ 
+  if (isP2SH) {
+    return mkScriptHashReplayScript(address, pubKeyHash);
   } else {
     // P2PKH-replay is a replacement for P2PKH
     // P2PKH-replay starts with a 0
-    return mkPubkeyHashReplayScript(address);
-    //return mkScriptHashReplayScript(address)
+    return mkPubkeyHashReplayScript(address, pubKeyHash);
   }
 }
 
@@ -136,7 +119,7 @@ function deserializeTx(hexStr) {
     version: 0, locktime: 0, ins: [], outs: []
 
     // Version
-  }; txObj.version = buf.readUInt32LE(offset);
+  };txObj.version = buf.readUInt32LE(offset);
   offset += 4;
 
   // Vins
@@ -263,8 +246,9 @@ function createRawTx(history, recipients) {
     };
   });
   txObj.outs = recipients.map(function (o) {
+    this.pubKeyHash
     return {
-      script: addressToScript(o.address),
+      script: addressToScript(o.address, o.pubKeyHash, o.isP2SH),
       satoshis: o.satoshis
     };
   });
