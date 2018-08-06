@@ -8,7 +8,6 @@ var zcrypto = require('./crypto');
 var zconstants = require('./constants');
 var zaddress = require('./address');
 var zopcodes = require('./opcodes');
-var zbufferutils = require('./bufferutils');
 
 /* More info: https://github.com/ZencashOfficial/zen/blob/master/src/script/standard.cpp#L377
  * Given an address, generates a pubkeyhash replay type script needed for the transaction
@@ -30,7 +29,7 @@ function mkPubkeyHashReplayScript(address, pubKeyHash) {
   // block hash is encoded in little indian
 
   // '14' is the length of the subAddrHex (in bytes)
-  return zopcodes.OP_DUP + zopcodes.OP_HASH160 + zbufferutils.getStringBufferLength(subAddrHex) + subAddrHex + zopcodes.OP_EQUALVERIFY + zopcodes.OP_CHECKSIG;
+  return zopcodes.OP_DUP + zopcodes.OP_HASH160 + zbufferutils.getPushDataLength(subAddrHex) + subAddrHex + zopcodes.OP_EQUALVERIFY + zopcodes.OP_CHECKSIG;
 }
 
 /*
@@ -49,7 +48,7 @@ function mkScriptHashReplayScript(address, pubKeyHash) {
 
   // '14' is the length of the subAddrHex (in bytes)
   // https://github.com/TheTrunk/zelcash/blob/master/src/script/standard.cpp
-  return zopcodes.OP_HASH160 + zbufferutils.getStringBufferLength(subAddrHex) + subAddrHex + zopcodes.OP_EQUAL;
+  return zopcodes.OP_HASH160 + zbufferutils.getPushDataLength(subAddrHex) + subAddrHex + zopcodes.OP_EQUAL;
 }
 
 /*
@@ -197,7 +196,7 @@ function serializeTx(txObj) {
     serializedTx += _buf16.toString('hex');
 
     // Script
-    serializedTx += zbufferutils.getStringBufferLength(i.script);
+    serializedTx += zbufferutils.getPushDataLength(i.script);
     serializedTx += i.script;
 
     // Sequence
@@ -216,7 +215,7 @@ function serializeTx(txObj) {
     _buf32.writeUInt32LE(Math.floor(o.satoshis / 0x100000000), 4);
 
     serializedTx += _buf32.toString('hex');
-    serializedTx += zbufferutils.getStringBufferLength(o.script);
+    serializedTx += zbufferutils.getPushDataLength(o.script);
     serializedTx += o.script;
   });
 
@@ -300,7 +299,7 @@ function signTx(_txObj, i, privKey, compressPubKey, hashcode) {
   // WHAT? If it fails, uncompress/compress it and it should work...
   const pubKey = zaddress.privKeyToPubKey(privKey, compressPubKey);
 
-  txObj.ins[i].script = zbufferutils.getStringBufferLength(signatureDER) + signatureDER + zbufferutils.getStringBufferLength(pubKey) + pubKey;
+  txObj.ins[i].script = zbufferutils.getPushDataLength(signatureDER) + signatureDER + zbufferutils.getPushDataLength(pubKey) + pubKey;
 
   return txObj;
 }
