@@ -5,5 +5,6 @@ module.exports = {
   crypto: require('./crypto'),
   transaction: require('./transaction'),
   transactionzen: require('./transactionzen'),
-  txmessage: require('./txmessage')
+  txmessage: require('./txmessage'),
+  txomni: require('./txomni')
 };
