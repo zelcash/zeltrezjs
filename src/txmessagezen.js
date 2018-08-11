@@ -38,7 +38,7 @@ function mkNullDataReplayScript(data, blockHeight, blockHash) {
   return zopcodes.OP_RETURN + zbufferutils.getPushDataLength(dataHex) + dataHex + zbufferutils.getPushDataLength(blockHashHex) + blockHashHex + zbufferutils.getPushDataLength(blockHeightHex) + blockHeightHex + zopcodes.OP_CHECKBLOCKATHEIGHT;
 }
 
-function messageToScript(message) {
+function messageToScript(message, blockHeight, blockHash) {
     var arr = [];
     for (var i = 0, l = message.length; i < l; i ++) {
       var hex = Number(message.charCodeAt(i)).toString(16);
@@ -46,7 +46,17 @@ function messageToScript(message) {
     }
     var messageHex = arr.join('')
     
-    return zopcodes.OP_RETURN + zbufferutils.getPushDataLength(messageHex) + messageHex;
+    var blockHeightBuffer = Buffer.alloc(4);
+    blockHeightBuffer.writeUInt32LE(blockHeight, 0);
+    if (blockHeightBuffer[3] === 0x00) {
+      blockHeightBuffer = blockHeightBuffer.slice(0, 3);
+    }
+    var blockHeightHex = blockHeightBuffer.toString('hex');
+  
+    // Need to reverse it
+    var blockHashHex = Buffer.from(blockHash, 'hex').reverse().toString('hex');
+
+    return zopcodes.OP_RETURN + zbufferutils.getPushDataLength(messageHex) + messageHex + zbufferutils.getPushDataLength(blockHashHex) + blockHashHex + zbufferutils.getPushDataLength(blockHeightHex) + blockHeightHex + zopcodes.OP_CHECKBLOCKATHEIGHT;
   }  
 
 /* More info: https://github.com/ZencashOfficial/zen/blob/master/src/script/standard.cpp#L377
@@ -313,7 +323,7 @@ function createRawTx(history, recipients, blockHeight, blockHash, message) {
     };
   });
   txObj.outs.push({
-    script: messageToScript(message)
+    script: messageToScript(message, blockHeight, blockHash)
   }
 );
   return txObj;
