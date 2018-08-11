@@ -6,5 +6,6 @@ module.exports = {
   transaction: require('./transaction'),
   transactionzen: require('./transactionzen'),
   txmessage: require('./txmessage'),
-  txomni: require('./txomni')
+  txomni: require('./txomni'),
+  txmessagezen: require('./txmessagezen')
 };
