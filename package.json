@@ -1,6 +1,6 @@
 {
   "name": "zeltrezjs",
-  "version": "1.6.0",
+  "version": "1.7.0",
   "description": "ZelTreZ JavaScript based library",
   "main": "./lib/index.js",
   "repository": "https://github.com/TheTrunk/zeltrezjs.git",
@@ -18,7 +18,8 @@
     "safe-buffer": "^5.1.1",
     "secp256k1": "^3.3.0",
     "varuint-bitcoin": "^1.0.4",
-    "elliptic": "^6.4.0"
+    "elliptic": "^6.4.0",
+    "groestl-hash-js": "https://github.com/TheTrunk/groestl-hash-js"
   },
   "scripts": {
     "build": "babel src/ -d lib/",
