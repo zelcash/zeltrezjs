@@ -3,8 +3,8 @@
   "version": "1.7.0",
   "description": "ZelTreZ JavaScript based library",
   "main": "./lib/index.js",
-  "repository": "https://github.com/TheTrunk/zeltrezjs.git",
-  "author": "The Trunk",
+  "repository": "https://github.com/zelcash/zeltrezjs.git",
+  "author": "Kendrick Tan, The Trunk",
   "license": "MIT",
   "dependencies": {
     "bigi": "^1.4.2",
@@ -19,7 +19,7 @@
     "secp256k1": "^3.3.0",
     "varuint-bitcoin": "^1.0.4",
     "elliptic": "^6.4.0",
-    "groestl-hash-js": "git://github.com/TheTrunk/groestl-hash-js.git#master"
+    "groestl-hash-js": "git://github.com/zelcash/groestl-hash-js.git#master"
   },
   "scripts": {
     "build": "babel src/ -d lib/",
