@@ -21,5 +21,13 @@ module.exports = {
   OP_REVERSED: '89',
   OP_CHECKMULTISIG: 'ae',
   OP_PUSHDATA1: '4c',
-  OP_RETURN: '6a'
+  OP_RETURN: '6a',
+  OP_RVN_ASSET: 'c0',
+  OP_DROP: '75',
+  RVN_R: '72', // 114
+  RVN_V: '76', // 118
+  RVN_N: '6e', // 110
+  RVN_Q: '71', // 113
+  RVN_T: '74', // 116
+  RVN_O: '6f', // 111
 };

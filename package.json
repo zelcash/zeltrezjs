@@ -1,6 +1,6 @@
 {
   "name": "zeltrezjs",
-  "version": "1.7.0",
+  "version": "1.8.0",
   "description": "ZelTreZ JavaScript based library",
   "main": "./lib/index.js",
   "repository": "https://github.com/zelcash/zeltrezjs.git",
