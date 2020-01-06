@@ -33,6 +33,6 @@
     "babel-preset-flow": "^6.23.0",
     "chai": "^4.1.0",
     "flow-bin": "^0.51.0",
-    "mocha": "^3.4.2"
+    "mocha": "^7.0.0"
   }
 }
