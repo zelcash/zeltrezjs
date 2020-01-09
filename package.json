@@ -16,7 +16,7 @@
     "libsodium-sumo": "^0.5.2",
     "libsodium-wrappers-sumo": "^0.5.2",
     "safe-buffer": "^5.1.1",
-    "secp256k1": "^3.3.0",
+    "secp256k1": "^4.0.0",
     "varuint-bitcoin": "^1.0.4",
     "elliptic": "^6.4.0",
     "groestl-hash-js": "git://github.com/zelcash/groestl-hash-js.git#master"
